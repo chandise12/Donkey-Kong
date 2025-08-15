@@ -1,0 +1,4 @@
+../Core/Src/slider.c:12:6:start_slider	1
+../Core/Src/slider.c:16:10:get_pos	1
+../Core/Src/slider.c:21:10:conv_pos	1
+../Core/Src/slider.c:28:7:conv_ADC	1

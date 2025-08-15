@@ -37,6 +37,8 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 extern ADC_HandleTypeDef hadc1;
+extern TIM_HandleTypeDef htim5;
+
 
 /* USER CODE END ET */
 
@@ -60,10 +62,12 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
-#define BUTTON_IN0_Pin GPIO_PIN_2
-#define BUTTON_IN0_GPIO_Port GPIOC
-#define BUTTON_IN1_Pin GPIO_PIN_3
-#define BUTTON_IN1_GPIO_Port GPIOC
+#define BUTTON0_IN_Pin GPIO_PIN_2
+#define BUTTON0_IN_GPIO_Port GPIOC
+#define BUTTON0_IN_EXTI_IRQn EXTI2_IRQn
+#define BUTTON1_IN_Pin GPIO_PIN_3
+#define BUTTON1_IN_GPIO_Port GPIOC
+#define BUTTON1_IN_EXTI_IRQn EXTI3_IRQn
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3

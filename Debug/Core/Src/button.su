@@ -1,0 +1,6 @@
+../Core/Src/button.c:19:6:climb_pressed	16	static
+../Core/Src/button.c:26:6:shield_pressed	16	static
+../Core/Src/button.c:33:6:shield_counter	8	static
+../Core/Src/button.c:47:6:timeout_counter	8	static
+../Core/Src/button.c:58:6:set_shield_time	16	static
+../Core/Src/button.c:64:6:set_timeout_time	16	static

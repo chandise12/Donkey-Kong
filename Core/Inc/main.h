@@ -38,6 +38,8 @@ extern "C" {
 /* USER CODE BEGIN ET */
 extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim2;
+
 
 
 /* USER CODE END ET */
@@ -76,12 +78,20 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOA
 #define SLIDER_IN_Pin GPIO_PIN_4
 #define SLIDER_IN_GPIO_Port GPIOC
+#define AUDIO_B1_OUT_Pin GPIO_PIN_5
+#define AUDIO_B1_OUT_GPIO_Port GPIOC
+#define AUDIO_B0_OUT_Pin GPIO_PIN_6
+#define AUDIO_B0_OUT_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define AUDIO_B2_OUT_Pin GPIO_PIN_8
+#define AUDIO_B2_OUT_GPIO_Port GPIOB
+#define AUDIO_B3_OUT_Pin GPIO_PIN_9
+#define AUDIO_B3_OUT_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

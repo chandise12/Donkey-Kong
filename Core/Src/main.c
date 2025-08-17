@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "slider.h"
 #include "button.h"
+#include "audio.h"
 
 #include <stdio.h>
 
@@ -46,7 +47,6 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
-TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
 
@@ -105,9 +105,9 @@ int main(void)
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
 
-  set_shield_time(3);
-  set_timeout_time(3);
   HAL_Delay(2000);
+
+  play_audio(punch,punch_length);
 
   /* USER CODE END 2 */
 
@@ -115,6 +115,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  Piano_In(0x4, C4,  C5,  C6,  F4);
+
+
 //	  if(is_climb){
 //		  printf("Climbing\n");
 //	  }else{
@@ -254,9 +257,9 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 336000000;
+  htim2.Init.Period = 7619;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -377,6 +380,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, AUDIO_B1_OUT_Pin|AUDIO_B0_OUT_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, AUDIO_B2_OUT_Pin|AUDIO_B3_OUT_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : B1_Pin BUTTON1_IN_Pin */
   GPIO_InitStruct.Pin = B1_Pin|BUTTON1_IN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
@@ -395,6 +404,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : AUDIO_B1_OUT_Pin AUDIO_B0_OUT_Pin */
+  GPIO_InitStruct.Pin = AUDIO_B1_OUT_Pin|AUDIO_B0_OUT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : AUDIO_B2_OUT_Pin AUDIO_B3_OUT_Pin */
+  GPIO_InitStruct.Pin = AUDIO_B2_OUT_Pin|AUDIO_B3_OUT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);

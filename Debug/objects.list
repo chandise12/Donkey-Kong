@@ -1,3 +1,4 @@
+"./Core/Src/audio.o"
 "./Core/Src/button.o"
 "./Core/Src/main.o"
 "./Core/Src/slider.o"

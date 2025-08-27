@@ -14,6 +14,7 @@ void start_slider();
 uint16_t get_pos();
 uint16_t conv_pos();
 float conv_ADC();
+uint8_t get_dir();
 
 
 #endif /* INC_SLIDER_H_ */

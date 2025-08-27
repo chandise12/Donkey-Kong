@@ -10,4 +10,4 @@
 ../Core/Src/stm32f4xx_it.c:209:6:EXTI2_IRQHandler	1
 ../Core/Src/stm32f4xx_it.c:223:6:EXTI3_IRQHandler	1
 ../Core/Src/stm32f4xx_it.c:237:6:TIM2_IRQHandler	1
-../Core/Src/stm32f4xx_it.c:252:6:TIM5_IRQHandler	2
+../Core/Src/stm32f4xx_it.c:253:6:TIM5_IRQHandler	2

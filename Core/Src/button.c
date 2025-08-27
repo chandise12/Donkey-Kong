@@ -11,10 +11,10 @@ TIM_HandleTypeDef htim5;
 bool is_climb = 0;
 bool is_shield = 0;
 bool is_timeout = 0;
-uint32_t shield_time = 4; // (seconds)
-uint32_t timeout_time = 4; // (seconds)
-uint32_t shield_count = 0;
-uint32_t timeout_count = 0;
+uint8_t shield_time = 4; // (seconds)
+uint8_t timeout_time = 4; // (seconds)
+uint8_t shield_count = 0;
+uint8_t timeout_count = 0;
 
 void climb_pressed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 	if( HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) ){ // pin is high, was just pressed
@@ -55,13 +55,13 @@ void timeout_counter(){
 	}
 }
 
-void set_shield_time(uint32_t time){
+void set_shield_time(uint8_t time){
 	shield_time = time;
 }
 
 
 
-void set_timeout_time(uint32_t time){
+void set_timeout_time(uint8_t time){
 	timeout_time = time;
 }
 

@@ -24,6 +24,11 @@
 #include "slider.h"
 #include "button.h"
 #include "audio.h"
+#include "st7735.h"
+#include "fonts.h"
+#include "testimg.h"
+#include "game.h"
+//#include "graphics.h"
 
 #include <stdio.h>
 
@@ -47,6 +52,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+SPI_HandleTypeDef hspi2;
+
 
 UART_HandleTypeDef huart2;
 
@@ -61,8 +68,9 @@ static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
-
+void loop();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -103,11 +111,13 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_TIM5_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+  ST7735_Init();
   HAL_Delay(2000);
-
-  play_audio(punch,punch_length);
+  ST7735_FillScreen(ST7735_BLACK);
+  HAL_Delay(1000);
+  create_map();
 
   /* USER CODE END 2 */
 
@@ -130,6 +140,8 @@ int main(void)
 //		  printf("No shield\n\n");
 //	  }
 ////	 printf("Position: %d\n\n", posi);
+
+
 
     /* USER CODE END WHILE */
 
@@ -237,6 +249,44 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
   * @brief TIM2 Initialization Function
   * @param None
   * @retval None
@@ -257,9 +307,9 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 7619;
+  htim2.Init.Period = 0;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -384,7 +434,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, AUDIO_B1_OUT_Pin|AUDIO_B0_OUT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, AUDIO_B2_OUT_Pin|AUDIO_B3_OUT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LCD_CS_Pin|LCD_AO_Pin|LCD_RESET_Pin|AUDIO_B2_OUT_Pin
+                          |AUDIO_B3_OUT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : B1_Pin BUTTON1_IN_Pin */
   GPIO_InitStruct.Pin = B1_Pin|BUTTON1_IN_Pin;
@@ -412,8 +463,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : AUDIO_B2_OUT_Pin AUDIO_B3_OUT_Pin */
-  GPIO_InitStruct.Pin = AUDIO_B2_OUT_Pin|AUDIO_B3_OUT_Pin;
+  /*Configure GPIO pins : LCD_CS_Pin LCD_AO_Pin LCD_RESET_Pin AUDIO_B2_OUT_Pin
+                           AUDIO_B3_OUT_Pin */
+  GPIO_InitStruct.Pin = LCD_CS_Pin|LCD_AO_Pin|LCD_RESET_Pin|AUDIO_B2_OUT_Pin
+                          |AUDIO_B3_OUT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -442,6 +495,71 @@ int _write(int file, char *ptr, int len){
   	}
   	return len;
   }
+
+void loop() {
+    // Check border
+    ST7735_FillScreen(ST7735_BLACK);
+
+    for(int x = 0; x < ST7735_WIDTH; x++) {
+        ST7735_DrawPixel(x, 0, ST7735_RED);
+        ST7735_DrawPixel(x, ST7735_HEIGHT-1, ST7735_RED);
+    }
+
+    for(int y = 0; y < ST7735_HEIGHT; y++) {
+        ST7735_DrawPixel(0, y, ST7735_RED);
+        ST7735_DrawPixel(ST7735_WIDTH-1, y, ST7735_RED);
+    }
+
+    HAL_Delay(3000);
+
+    // Check fonts
+    ST7735_FillScreen(ST7735_BLACK);
+    ST7735_WriteString(0, 0, "Font_7x10, red on black, lorem ipsum dolor sit amet", Font_7x10, ST7735_RED, ST7735_BLACK);
+    ST7735_WriteString(0, 3*10, "Font_11x18, green, lorem ipsum", Font_11x18, ST7735_GREEN, ST7735_BLACK);
+    ST7735_WriteString(0, 3*10+3*18, "Font_16x26", Font_16x26, ST7735_BLUE, ST7735_BLACK);
+    HAL_Delay(2000);
+
+    // Check colors
+    ST7735_FillScreen(ST7735_BLACK);
+    ST7735_WriteString(0, 0, "BLACK", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_BLUE);
+    ST7735_WriteString(0, 0, "BLUE", Font_11x18, ST7735_BLACK, ST7735_BLUE);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_RED);
+    ST7735_WriteString(0, 0, "RED", Font_11x18, ST7735_BLACK, ST7735_RED);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_GREEN);
+    ST7735_WriteString(0, 0, "GREEN", Font_11x18, ST7735_BLACK, ST7735_GREEN);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_CYAN);
+    ST7735_WriteString(0, 0, "CYAN", Font_11x18, ST7735_BLACK, ST7735_CYAN);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_MAGENTA);
+    ST7735_WriteString(0, 0, "MAGENTA", Font_11x18, ST7735_BLACK, ST7735_MAGENTA);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_YELLOW);
+    ST7735_WriteString(0, 0, "YELLOW", Font_11x18, ST7735_BLACK, ST7735_YELLOW);
+    HAL_Delay(500);
+
+    ST7735_FillScreen(ST7735_WHITE);
+    ST7735_WriteString(0, 0, "WHITE", Font_11x18, ST7735_BLACK, ST7735_WHITE);
+    HAL_Delay(500);
+
+//#ifdef ST7735_IS_128X128
+    // Display test image 128x128
+//    ST7735_DrawImage(0, 0, ST7735_WIDTH, ST7735_HEIGHT, (uint16_t*)test_img_128x128);
+
+    HAL_Delay(15000);
+//#endif // ST7735_IS_128X128
+
+}
 
 
 /* USER CODE END 4 */

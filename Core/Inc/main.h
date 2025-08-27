@@ -80,6 +80,14 @@ void Error_Handler(void);
 #define SLIDER_IN_GPIO_Port GPIOC
 #define AUDIO_B1_OUT_Pin GPIO_PIN_5
 #define AUDIO_B1_OUT_GPIO_Port GPIOC
+#define LCD_CS_Pin GPIO_PIN_12
+#define LCD_CS_GPIO_Port GPIOB
+#define LCD_SCK_Pin GPIO_PIN_13
+#define LCD_SCK_GPIO_Port GPIOB
+#define LCD_AO_Pin GPIO_PIN_14
+#define LCD_AO_GPIO_Port GPIOB
+#define LCD_SDA_Pin GPIO_PIN_15
+#define LCD_SDA_GPIO_Port GPIOB
 #define AUDIO_B0_OUT_Pin GPIO_PIN_6
 #define AUDIO_B0_OUT_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
@@ -88,6 +96,8 @@ void Error_Handler(void);
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define LCD_RESET_Pin GPIO_PIN_7
+#define LCD_RESET_GPIO_Port GPIOB
 #define AUDIO_B2_OUT_Pin GPIO_PIN_8
 #define AUDIO_B2_OUT_GPIO_Port GPIOB
 #define AUDIO_B3_OUT_Pin GPIO_PIN_9

@@ -15,17 +15,17 @@
 extern bool is_climb;
 extern bool is_shield;
 extern bool is_timeout;
-extern uint32_t shield_time;
-extern uint32_t timeout_time;
-extern uint32_t shield_count;
-extern uint32_t timeout_count;
+extern uint8_t shield_time;
+extern uint8_t timeout_time;
+extern uint8_t shield_count;
+extern uint8_t timeout_count;
 
 void climb_pressed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 void shield_pressed(uint16_t GPIO_Pin);
 void shield_counter();
 void timeout_counter();
-void set_shield_time(uint32_t time);
-void set_timeout_time(uint32_t time);
+void set_shield_time(uint8_t time);
+void set_timeout_time(uint8_t time);
 
 
 #endif /* INC_BUTTON_H_ */

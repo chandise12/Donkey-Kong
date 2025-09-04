@@ -9,7 +9,7 @@
 #include "main.h"
 #include "audio.h"
 
-TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim1;
 const uint8_t *current_audio = 0;
 uint32_t current_length = 0;
 uint32_t index_audio = 0;
@@ -25,12 +25,12 @@ void DAC_OUT(uint32_t value){
 
 void play_audio(const uint8_t *audio, uint32_t length){
 	if(!index_audio){//start the timer
-		HAL_TIM_Base_Start_IT(&htim2);
+		HAL_TIM_Base_Start_IT(&htim1);
 		current_audio = audio;
 		current_length = length;
 
 	}else if(length == index_audio){ //end of audio
-		HAL_TIM_Base_Stop_IT(&htim2);
+		HAL_TIM_Base_Stop_IT(&htim1);
 		index_audio = 1;
 		current_audio = 0;
 		current_length = 0;

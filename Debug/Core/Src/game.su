@@ -1,1 +1,7 @@
-../Core/Src/game.c:16:6:create_map	24	static
+../Core/Src/game.c:23:6:create_map	24	static
+../Core/Src/game.c:48:6:player_Init	16	static
+../Core/Src/game.c:77:9:can_climb	16	static
+../Core/Src/game.c:86:6:update_input	16	static
+../Core/Src/game.c:107:6:update_player	32	static
+../Core/Src/game.c:191:6:erase_player	24	static
+../Core/Src/game.c:210:6:gameplay	8	static

@@ -10,11 +10,15 @@
 
 #include "main.h"
 
+extern volatile uint8_t new_pos;
+
 void start_slider();
-uint16_t get_pos();
-uint16_t conv_pos();
-float conv_ADC();
+int16_t get_pos();
+//void conv_pos();
+void get_ADC();
 uint8_t get_dir();
+uint8_t in_motion();
+
 
 
 #endif /* INC_SLIDER_H_ */

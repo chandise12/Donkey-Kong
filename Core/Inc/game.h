@@ -11,7 +11,9 @@
 
 void create_map();
 void gameplay();
-void player_Init();
+void player_Init(struct player_t *player);
+void update_player(struct player_t *player);
+void draw_player(struct player_t *player);
 
 
 

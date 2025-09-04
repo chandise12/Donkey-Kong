@@ -1,6 +1,5 @@
-../Core/Src/slider.c:16:6:start_slider	8	static
-../Core/Src/slider.c:20:10:get_pos	16	static
-../Core/Src/slider.c:25:10:conv_pos	16	static
-../Core/Src/slider.c:33:7:conv_ADC	16	static
-../Core/Src/slider.c:44:9:get_dir	4	static
-../Core/Src/slider.c:53:9:is_still	4	static
+../Core/Src/slider.c:22:6:start_slider	8	static
+../Core/Src/slider.c:27:9:get_pos	24	static
+../Core/Src/slider.c:45:6:get_ADC	8	static
+../Core/Src/slider.c:54:9:in_motion	16	static
+../Core/Src/slider.c:62:9:get_dir	4	static

@@ -20,12 +20,12 @@ extern uint8_t timeout_time;
 extern uint8_t shield_count;
 extern uint8_t timeout_count;
 
-void climb_pressed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
-void shield_pressed(uint16_t GPIO_Pin);
+uint8_t climb_pressed();
+void shield_pressed();
 void shield_counter();
 void timeout_counter();
-void set_shield_time(uint8_t time);
-void set_timeout_time(uint8_t time);
-
+void set_climb(uint8_t value);
+uint8_t get_climb();
+uint8_t get_shield();
 
 #endif /* INC_BUTTON_H_ */

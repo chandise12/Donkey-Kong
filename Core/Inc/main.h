@@ -37,11 +37,10 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 extern ADC_HandleTypeDef hadc1;
-extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim2;
-
-
-
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim5;
+extern SPI_HandleTypeDef hspi2;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

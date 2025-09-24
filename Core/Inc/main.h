@@ -79,6 +79,8 @@ void Error_Handler(void);
 #define SLIDER_IN_GPIO_Port GPIOC
 #define AUDIO_B1_OUT_Pin GPIO_PIN_5
 #define AUDIO_B1_OUT_GPIO_Port GPIOC
+#define RANDOM_IN_Pin GPIO_PIN_1
+#define RANDOM_IN_GPIO_Port GPIOB
 #define LCD_CS_Pin GPIO_PIN_12
 #define LCD_CS_GPIO_Port GPIOB
 #define LCD_SCK_Pin GPIO_PIN_13

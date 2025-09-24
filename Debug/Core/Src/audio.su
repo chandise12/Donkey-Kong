@@ -1,2 +1,2 @@
 ../Core/Src/audio.c:19:6:DAC_OUT	16	static
-../Core/Src/audio.c:26:6:play_audio	16	static
+../Core/Src/audio.c:26:6:play_audio	24	static

@@ -1,6 +1,5 @@
-Core/Src/game.o: ../Core/Src/game.c ../Core/Inc/game.h \
- ../Core/Inc/slider.h ../Core/Inc/main.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+Core/Src/random.o: ../Core/Src/random.c ../Core/Inc/random.h \
+ ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -31,12 +30,8 @@ Core/Src/game.o: ../Core/Src/game.c ../Core/Inc/game.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/button.h ../Core/Inc/audio.h ../Core/Inc/st7735/st7735.h \
- ../Core/Inc/st7735/fonts.h ../Core/Inc/st7735/fonts.h \
- ../Core/Inc/graphics.h ../Core/Inc/random.h
-../Core/Inc/game.h:
-../Core/Inc/slider.h:
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+../Core/Inc/random.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -70,10 +65,3 @@ Core/Src/game.o: ../Core/Src/game.c ../Core/Inc/game.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Inc/button.h:
-../Core/Inc/audio.h:
-../Core/Inc/st7735/st7735.h:
-../Core/Inc/st7735/fonts.h:
-../Core/Inc/st7735/fonts.h:
-../Core/Inc/graphics.h:
-../Core/Inc/random.h:

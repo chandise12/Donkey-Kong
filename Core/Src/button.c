@@ -24,11 +24,13 @@ uint8_t climb_pressed() {
 	}
 	return 0;
 }
-void shield_pressed() {
+uint8_t shield_pressed() {
 	if (HAL_GPIO_ReadPin(GPIOC, BUTTON1_IN_Pin) && !is_shield && !is_timeout) {
 		is_shield = 1;
 		HAL_TIM_Base_Start_IT(&htim5);
+		return 1;
 	}
+	return 0;
 }
 
 void shield_counter() {

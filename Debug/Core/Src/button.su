@@ -1,7 +1,7 @@
 ../Core/Src/button.c:21:9:climb_pressed	8	static
-../Core/Src/button.c:27:6:shield_pressed	8	static
-../Core/Src/button.c:34:6:shield_counter	8	static
-../Core/Src/button.c:48:6:timeout_counter	8	static
-../Core/Src/button.c:60:6:set_climb	16	static
-../Core/Src/button.c:64:9:get_climb	4	static
-../Core/Src/button.c:68:9:get_shield	4	static
+../Core/Src/button.c:27:9:shield_pressed	8	static
+../Core/Src/button.c:36:6:shield_counter	8	static
+../Core/Src/button.c:50:6:timeout_counter	8	static
+../Core/Src/button.c:62:6:set_climb	16	static
+../Core/Src/button.c:66:9:get_climb	4	static
+../Core/Src/button.c:70:9:get_shield	4	static

@@ -17,10 +17,10 @@ uint32_t index_audio = 0;
 
 
 void DAC_OUT(uint32_t value){
-	HAL_GPIO_WritePin(GPIOC,AUDIO_B0_OUT_Pin,value&0x01);
-	HAL_GPIO_WritePin(GPIOC,AUDIO_B1_OUT_Pin,value&0x02);
-	HAL_GPIO_WritePin(GPIOB,AUDIO_B2_OUT_Pin,value&0x03);
-	HAL_GPIO_WritePin(GPIOB,AUDIO_B3_OUT_Pin,value&0x04);
+	HAL_GPIO_WritePin(GPIOC,AUDIO_B0_OUT_Pin,value&0x01 );
+	HAL_GPIO_WritePin(GPIOC,AUDIO_B1_OUT_Pin,(value&0x02) >> 1 );
+	HAL_GPIO_WritePin(GPIOB,AUDIO_B2_OUT_Pin,(value&0x04) >> 2 );
+	HAL_GPIO_WritePin(GPIOB,AUDIO_B3_OUT_Pin,(value&0x08) >> 3 );
 }
 
 void play_audio(const uint8_t *audio, uint32_t length){
@@ -31,12 +31,13 @@ void play_audio(const uint8_t *audio, uint32_t length){
 
 	}else if(length == index_audio){ //end of audio
 		HAL_TIM_Base_Stop_IT(&htim1);
-		index_audio = 1;
+		index_audio = 0;
 		current_audio = 0;
 		current_length = 0;
 		return;
 	}
 		index_audio++;
-		DAC_OUT(audio[index_audio]);
+		uint32_t val = audio[index_audio] == 7 ? 1 : 14;
+		DAC_OUT(val);
 
 }

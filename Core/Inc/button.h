@@ -21,7 +21,7 @@ extern uint8_t shield_count;
 extern uint8_t timeout_count;
 
 uint8_t climb_pressed();
-void shield_pressed();
+uint8_t shield_pressed();
 void shield_counter();
 void timeout_counter();
 void set_climb(uint8_t value);

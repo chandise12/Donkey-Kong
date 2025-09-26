@@ -80,15 +80,6 @@ uint8_t is_touching(uint8_t sprite_pos, uint8_t sprite_len, uint8_t item_pos, ui
 }
 
 
-uint8_t can_climb(player_t *player, input_t *input){
-
-	if(is_touching(input->position, 14, ladder_pos[player->lvl], 12)) return 1;
-
-	return 0;
-}
-
-
-
 void update_input(player_t *player, input_t *input){
 	input->position = get_pos();
 

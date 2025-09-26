@@ -22,7 +22,40 @@ const uint32_t fileslen_audio[7] = {0, ready_length, punch_length, win_length, l
 sound_t audios[5] = {0};
 uint8_t count = 0;
 
+
+
+
+
+
+void player_Init(player_t *player){
+	player->lvl = 0;
+	player->x = 0;
+	player->y = ground_pos[0];
+	player->direction = 1;
+	player->motion = 0;
+	player->climb = 0;
+	player->hit = 0;
+	player->shield = 0;
+}
+
+void DK_Init(DK_t *DK){
+	DK->x = 0;
+	DK->y = 0;
+	DK->state = 0;
+}
+
+void bullet_Init(bullet_t *bullet){
+	for(int i = 0; i < 5; i++){
+		bullet[i].x = 0;
+		bullet[i].y = 0;
+		bullet[i].state = unselected;
+	}
+}
+
+
+
 void create_map() {
+
 	ST7735_FillScreen(ST7735_BLACK);
 	for (int i = 0; i < 7; i++) {
 		if (i == 0) {
@@ -38,39 +71,19 @@ void create_map() {
 }
 
 
+uint8_t is_touching(uint8_t sprite_pos, uint8_t sprite_len, uint8_t item_pos, uint8_t item_len){ //moving object should be sprite
 
+	if(item_pos <= sprite_pos && sprite_pos <= item_pos+item_len) return 1;
+	else if(item_pos <= sprite_pos+sprite_len && sprite_pos+sprite_len <= item_pos+item_len) return 1;
 
-
-
-void player_Init(player_t *player) {
-	player->lvl = 0;
-	player->x = 0;
-	player->y = ground_pos[0];
-	player->direction = 1;
-	player->motion = 0;
-	player->climb = 0;
-	player->hit = 0;
-	player->shield = 0;
-}
-
-
-
-
-uint8_t can_climb(player_t *player, input_t *input){
-	if(ladder_pos[player->lvl]-2 <= input->position && ladder_pos[player->lvl]+12 >= input->position){ // player's leftmost side is between both ladder poles
-		return 1;
-	}else if(input->position+14 >= ladder_pos[player->lvl]-2 && input->position+14 <= ladder_pos[player->lvl]+12 ){// player's rightmost side is between both ladder poles
-		return 1;
-	}
 	return 0;
 }
 
-uint8_t is_touching(uint8_t sprite_pos, uint8_t sprite_len, uint8_t item_pos, uint8_t item_len){
-	if(item_pos <= sprite_pos && sprite_pos <= item_pos+item_len){
-		return 1;
-	}else if(item_pos <= sprite_pos+sprite_len && sprite_pos+sprite_len <= item_pos+item_len){
-		return 1;
-	}
+
+uint8_t can_climb(player_t *player, input_t *input){
+
+	if(is_touching(input->position, 14, ladder_pos[player->lvl], 12)) return 1;
+
 	return 0;
 }
 
@@ -79,27 +92,20 @@ uint8_t is_touching(uint8_t sprite_pos, uint8_t sprite_len, uint8_t item_pos, ui
 void update_input(player_t *player, input_t *input){
 	input->position = get_pos();
 
-	if(in_motion()){
-		input->slider = get_dir();
-	}else{
-		input->slider = get_dir()+2;
-	}
+	if( in_motion() ) input->slider = get_dir();
+	else input->slider = get_dir()+2;
 
-	input->button_climb = climb_pressed();
-	if(input->button_climb && !get_climb() && can_climb(player, input)){
-		set_climb(1);
-	}
 
-	if(shield_pressed()){ //if shield was just pressed
+	if( (input->button_climb = climb_pressed()) && !get_climb() && can_climb(player, input) ) set_climb(1);
+
+
+	if( shield_pressed() ){ //if shield was just pressed
 		load_audio(play_shield_out);
 		player->shield = 1;
-	}
-	if(player->shield && !get_shield()){ // if shield was just unequipped
+	}else if( player->shield && !get_shield() ){ // if shield was just unequipped
 		load_audio(play_shield_in);
 		player->shield = 0;
 	}
-
-
 }
 
 
@@ -117,19 +123,14 @@ void update_DK(DK_t *DK, bullet_t *bullet, player_t *player){
 			}
 			break;
 		case found_pos:
-			if(DK->x < DK->bullet_pos){
-				DK->x++;
-			}else if(DK->x > DK->bullet_pos){
-				DK->x--;
-			}else{
-				DK->state++;
-			}
+			if(DK->x < DK->bullet_pos) DK->x++;
+			else if(DK->x > DK->bullet_pos) DK->x--;
+			else DK->state++;
 			break;
 		case at_pos:
 			bullet[DK->bullet_index].state = moving;
 			DK->bullet_index = (DK->bullet_index+1)%5;
 			DK->state = getting_pos;
-
 			break;
 	}
 
@@ -138,13 +139,12 @@ void update_DK(DK_t *DK, bullet_t *bullet, player_t *player){
 		load_audio(play_win);
 	}
 
-
 	ST7735_DrawImage(DK->x , DK->y, DKong_size[0], DKong_size[1], (const uint16_t*) DKong);
 }
 
 
 void update_player(player_t *player, input_t *input, bullet_t *bullet) {
-	erase_player(player, input);
+	erase_player(player);
 	static uint8_t animate = 0;
 
 //	//lose animation
@@ -165,13 +165,11 @@ void update_player(player_t *player, input_t *input, bullet_t *bullet) {
 		player->y--;
 		player->climb++;
 		player->motion ^= 1;
-		if(get_shield()){
-			ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
-		}else{
-			ST7735_DrawImage(player->x , player->y, climb_animate[player->motion].w, climb_animate[player->motion].h, (const uint16_t*) climb_animate[player->motion].data);
 
-		}
+		if(get_shield()) ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
+		else ST7735_DrawImage(player->x , player->y, climb_animate[player->motion].w, climb_animate[player->motion].h, (const uint16_t*) climb_animate[player->motion].data);
 		return;
+
 	}else if(get_climb() && player->y == ground_pos[player->lvl]){
 		player->climb = 0;
 		set_climb(0);
@@ -183,12 +181,9 @@ void update_player(player_t *player, input_t *input, bullet_t *bullet) {
 			player->motion ^= 1; //rotate through running animations
 			animate = 0;
 		}
-		if(get_shield()){
-			ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
-		}else{
-			ST7735_DrawImage(player->x , player->y, climb_animate[player->motion].w, climb_animate[player->motion].h, (const uint16_t*) climb_animate[player->motion].data);
+		if(get_shield()) ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
+		else ST7735_DrawImage(player->x , player->y, climb_animate[player->motion].w, climb_animate[player->motion].h, (const uint16_t*) climb_animate[player->motion].data);
 
-		}
 		animate++;
 		return;
 	}
@@ -198,10 +193,9 @@ void update_player(player_t *player, input_t *input, bullet_t *bullet) {
 	player->y = FLOOR_LVL(ground_pos[player->lvl]);
 	switch(input->slider){
 	case left:
-		if(input->button_shield){
-			ST7735_DrawImage(player->x , player->y, shieldL_size[0], shieldL_size[1], (const uint16_t*) shieldL);
+		if(input->button_shield) ST7735_DrawImage(player->x , player->y, shieldL_size[0], shieldL_size[1], (const uint16_t*) shieldL);
 
-		}else{
+		else{
 			ST7735_DrawImage(player->x , player->y, runL_animate[player->motion].w, runL_animate[player->motion].h, runL_animate[player->motion].data);
 			if(animate >= 200){
 				player->motion ^= 1; //rotate through running animations
@@ -211,9 +205,8 @@ void update_player(player_t *player, input_t *input, bullet_t *bullet) {
 		}
 		break;
 	case right:
-		if(get_shield()){
-			ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
-		}else{
+		if(get_shield()) ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
+		else{
 			ST7735_DrawImage(player->x , player->y, runR_animate[player->motion].w, runR_animate[player->motion].h, runR_animate[player->motion].data);
 			if(animate >= 200){
 				player->motion ^= 1; //rotate through running animations
@@ -221,26 +214,21 @@ void update_player(player_t *player, input_t *input, bullet_t *bullet) {
 			}
 			animate++;
 		}
-			break;
+		break;
 	case idle_left:
-		if(get_shield()){
-			ST7735_DrawImage(player->x , player->y, shieldL_size[0], shieldL_size[1], (const uint16_t*) shieldL);
-		}else{
-			ST7735_DrawImage(player->x , player->y, standL_size[0], standL_size[1], (const uint16_t*) standL);
-		}
-			break;
+		if(get_shield()) ST7735_DrawImage(player->x , player->y, shieldL_size[0], shieldL_size[1], (const uint16_t*) shieldL);
+		else ST7735_DrawImage(player->x , player->y, standL_size[0], standL_size[1], (const uint16_t*) standL);
+		break;
 	case idle_right:
-		if(get_shield()){
-			ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
-		}else{
-			ST7735_DrawImage(player->x , player->y, standR_size[0], standR_size[1], (const uint16_t*) standR);
-		}
-			break;
+		if(get_shield()) ST7735_DrawImage(player->x , player->y, shieldR_size[0], shieldR_size[1], (const uint16_t*) shieldR);
+		else ST7735_DrawImage(player->x , player->y, standR_size[0], standR_size[1], (const uint16_t*) standR);
+		break;
 	}
 
 }
 
-void erase_player(player_t *player, input_t *input ){
+void erase_player(player_t *player){
+
 	ST7735_DrawImage(player->x , player->y, 16, 16, (const uint16_t*) black);
 	if(player->y == ground_pos[player->lvl]){ //redraw ladder and ground
 
@@ -248,7 +236,9 @@ void erase_player(player_t *player, input_t *input ){
 				(const uint16_t*) ladder);
 		ST7735_DrawImage(0, ground_pos[player->lvl], 128, 5,
 							(const uint16_t*) ground);
-	}else if(can_climb(player, input)){
+
+	}else if(is_touching(player->x, 15, ladder_pos[player->lvl], 12)){
+
 		ST7735_DrawImage(ladder_pos[player->lvl], ground_pos[player->lvl]-19, 10, 19,
 						(const uint16_t*) ladder);
 	}
@@ -260,21 +250,15 @@ void erase_bullet(bullet_t *bullet){
 	for(int i = 0; i < 5; i++){
 		ST7735_DrawImage(bullet[i].x , bullet[i].y, 4, 5, (const uint16_t*) black);
 
-		if(bullet[i].y+bulletD_size[1] > ground_pos[bullet[i].lvl] && bullet[i].lvl == 0){
-					ST7735_DrawImage(0, ground_pos[bullet[i].lvl], 128, 1,
-													(const uint16_t*) ground);
-		}else if(bullet[i].y+bulletD_size[1] > ground_pos[bullet[i].lvl]){
-			ST7735_DrawImage(0, ground_pos[bullet[i].lvl], 128, 5,
-											(const uint16_t*) ground);
-		}
+		if(is_touching(bullet[i].y, bulletD_size[1], ground_pos[bullet[i].lvl], 1) && bullet[i].lvl == 0) //redraw ground
+			ST7735_DrawImage(0, ground_pos[bullet[i].lvl], 128, 1,(const uint16_t*) ground);
+		else if(is_touching(bullet[i].y, bulletD_size[1], ground_pos[bullet[i].lvl], 5))
+				ST7735_DrawImage(0, ground_pos[bullet[i].lvl], 128, 5,
+															(const uint16_t*) ground);
 
-		if(ladder_pos[bullet[i].lvl] <= bullet[i].x && ladder_pos[ladder_pos[bullet[i].lvl]]+12 >=  bullet[i].x){ // player's leftmost side is between both ladder poles
+		if(is_touching(bullet[i].x, bulletD_size[0], ladder_pos[bullet[i].lvl], 12)) //redraw ladder
 			ST7735_DrawImage(ladder_pos[bullet[i].lvl], ground_pos[bullet[i].lvl]-19, 10, 19,
-							(const uint16_t*) ladder);
-		}else if(bullet[i].x+bulletD_size[0]  >= ladder_pos[bullet[i].lvl] && bullet[i].x+bulletD_size[0]<= ladder_pos[bullet[i].lvl]+12 ){// player's rightmost side is between both ladder poles
-				ST7735_DrawImage(ladder_pos[bullet[i].lvl], ground_pos[bullet[i].lvl]-19, 10, 19,
-											(const uint16_t*) ladder);
-		}
+				(const uint16_t*) ladder);
 	}
 }
 
@@ -310,9 +294,8 @@ void update_bullet(bullet_t *bullet, player_t *player){
 						animate = 0;
 					}
 
-					if(bullet[i].y > ground_pos[bullet[i].lvl]+5){ // if bullet has passed a ground lvl
-						bullet[i].lvl--;
-					}
+					if(bullet[i].y > ground_pos[bullet[i].lvl]+5) bullet[i].lvl--; // if bullet has passed a ground lvl
+
 
 					animate++;
 				}
@@ -320,10 +303,8 @@ void update_bullet(bullet_t *bullet, player_t *player){
 		}
 
 		if(is_touching(bullet[i].x, bulletD_size[0],player->x, 16) && is_touching( bullet[i].y, bulletD_size[1], player->y, 16 )){
-					player->hit = 1;
+			player->hit = 1;
 		}
-
-
 	}
 }
 
@@ -356,14 +337,19 @@ void gameplay() {
 		start_slider();
 		ST7735_Init();
 		player_Init(&player);
+		DK_Init(&donkey_kong);
+		bullet_Init(bullet);
 		load_audio(play_ready);
+		HAL_Delay(700);
 		state = GAMEPLAY;
-	} else if(state == GAMEPLAY){
+
+	}else if(state == GAMEPLAY){
 		update_input(&player, &input);
 		update_player(&player,&input, bullet);
 		update_bullet(bullet, &player);
 		update_DK(&donkey_kong, bullet, &player);
 		update_audio();
+
 	}else if(state == WIN){
 		ST7735_FillScreen(ST7735_BLACK);
 		ST7735_WriteString(20, 80, "YOU WIN", Font_11x18, ST7735_GREEN, ST7735_BLACK);

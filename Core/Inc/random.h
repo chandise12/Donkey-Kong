@@ -10,8 +10,6 @@
 
 #include "main.h"
 
-void start_random();
 uint8_t generate_number();
-
 
 #endif /* INC_RANDOM_H_ */

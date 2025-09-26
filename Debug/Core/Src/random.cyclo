@@ -1,2 +1,1 @@
-../Core/Src/random.c:11:6:start_random	1
-../Core/Src/random.c:15:9:generate_number	1
+../Core/Src/random.c:11:9:generate_number	1

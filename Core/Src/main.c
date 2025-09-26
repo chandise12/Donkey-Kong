@@ -115,13 +115,11 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-//	play_audio(ready, ready_length);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-
 		gameplay();
     /* USER CODE END WHILE */
 

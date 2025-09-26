@@ -1,2 +1,1 @@
-../Core/Src/random.c:11:6:start_random	4	static
-../Core/Src/random.c:15:9:generate_number	16	static
+../Core/Src/random.c:11:9:generate_number	16	static

@@ -89,20 +89,18 @@ void gameplay();
 
 void player_Init(player_t *player);
 void update_player(player_t *player, input_t *input, bullet_t *bullet);
-uint8_t can_climb(player_t *player, input_t *input);
 uint8_t is_touching(uint8_t sprite_pos, uint8_t sprite_len, uint8_t item_pos, uint8_t item_len);
-void erase_player(player_t *player, input_t *input );
+void erase_player(player_t *player);
 void update_input(player_t *player, input_t *input);
 
+void DK_Init(DK_t *DK);
 void update_DK(DK_t *DK, bullet_t *bullet, player_t *player);
 
+void bullet_Init(bullet_t *bullet);
 void update_bullet(bullet_t *bullet, player_t *player);
 void erase_bullet(bullet_t *bullet);
 
 void update_audio();
-void load_audio(sound_t audio);
-
-
 void load_audio(sound_t audio);
 
 
